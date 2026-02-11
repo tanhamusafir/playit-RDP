@@ -1,0 +1,27 @@
+name: Temporary Windows RDP (Playit)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Enable RDP
+        run: |
+          net user runneradmin Test@12345
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+
+      - name: Download Playit
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-windows-amd64.exe" -OutFile "playit.exe"
+
+      - name: Start Playit
+        run: |
+          Start-Process -FilePath ".\playit.exe"
+          
+      - name: Keep Runner Alive
+        run: Start-Sleep -Seconds 21600
