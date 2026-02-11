@@ -17,11 +17,12 @@ jobs:
 
       - name: Download Playit
         run: |
-          Invoke-WebRequest -Uri "https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-windows-amd64.exe" -OutFile "playit.exe"
+          $url = "https://playit.gg/download/windows"
+          Invoke-WebRequest -Uri $url -OutFile "playit.exe"
 
       - name: Start Playit
         run: |
-          Start-Process -FilePath ".\playit.exe"
-          
+          .\playit.exe
+
       - name: Keep Runner Alive
         run: Start-Sleep -Seconds 21600
